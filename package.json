@@ -1,0 +1,14 @@
+{
+  "name": "@ags/seo-sitemap",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Canonical truthful lastmod sitemap generator and FUTURE_LASTMOD guard for the 4-site AI Growth Systems network.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "bun test",
+    "sign": "bash scripts/sign-release.sh"
+  }
+}

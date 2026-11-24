@@ -1,0 +1,26 @@
+name: Release seo-sitemap
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun test
+      - run: (cd src && sha256sum --check --strict ../CHECKSUMS.src.txt)
+      - name: Compute tarball checksum and publish release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          curl -sfL "https://github.com/${GITHUB_REPOSITORY}/archive/refs/tags/${TAG}.tar.gz" -o pkg.tgz
+          sha256sum pkg.tgz > CHECKSUMS.txt
+          gh release create "${TAG}" CHECKSUMS.txt --title "${TAG}" --generate-notes || \
+            gh release upload "${TAG}" CHECKSUMS.txt --clobber
